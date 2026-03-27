@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Student Doubts</h2>
+
+<input id="doubt" placeholder="Enter your doubt..." style="width:300px;"><br><br>
+<button onclick="submitDoubt()">Submit</button>
+
+<h3>Your Doubts & Answers</h3>
+<div id="list"></div>
+
+<script>
+
+let currentUser = localStorage.getItem("studentEmail");
+
+function loadDoubts() {
+    let doubts = JSON.parse(localStorage.getItem("doubts")) || [];
+    let container = document.getElementById("list");
+
+    container.innerHTML = "";
+
+    doubts.forEach(d => {
+        if(d.email === currentUser) { // ✅ ONLY MY DOUBTS
+            let div = document.createElement("div");
+            div.innerHTML = `
+                <p><b>Q:</b> ${d.question}</p>
+                <p><b>A:</b> ${d.answer || "No answer yet"}</p>
+                <hr>
+            `;
+            container.appendChild(div);
+        }
+    });
+}
+
+function submitDoubt() {
+    let doubt = document.getElementById("doubt").value;
+
+    if(doubt) {
+        let doubts = JSON.parse(localStorage.getItem("doubts")) || [];
+
+        doubts.push({
+            email: currentUser, // ✅ SAVE USER
+            question: doubt,
+            answer: ""
+        });
+
+        localStorage.setItem("doubts", JSON.stringify(doubts));
+
+        document.getElementById("doubt").value = "";
+        loadDoubts();
+    } else {
+        alert("Enter doubt ❌");
+    }
+}
+
+loadDoubts();
+
+</script>
+
+</body>
+</html>
