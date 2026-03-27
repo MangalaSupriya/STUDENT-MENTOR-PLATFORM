@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Mentor Dashboard</h2>
+
+<button onclick="showDoubts()">Student Doubts</button><br><br>
+<button onclick="showExperience()">Faculty Experience</button>
+
+<div id="doubtsSection" style="display:none;">
+    <h3>Student Doubts</h3>
+    <div id="doubtList"></div>
+</div>
+
+<div id="experienceSection" style="display:none;">
+    <h3>Faculty Experiences</h3>
+    <div id="experienceList"></div>
+</div>
+
+<script>
+function hideAll() {
+    document.getElementById("doubtsSection").style.display = "none";
+    document.getElementById("experienceSection").style.display = "none";
+}
+
+function showDoubts() {
+    hideAll();
+    document.getElementById("doubtsSection").style.display = "block";
+
+    let doubts = JSON.parse(localStorage.getItem("doubts")) || [];
+    let container = document.getElementById("doubtList");
+
+    container.innerHTML = "";
+
+    doubts.forEach((d, index) => {
+        let div = document.createElement("div");
+
+        div.innerHTML = `
+            <p><b>Q:</b> ${d.question}</p>
+            <input id="ans${index}" placeholder="Type answer...">
+            <button onclick="submitAnswer(${index})">Submit</button>
+            <p><b>A:</b> ${d.answer || "No answer yet"}</p>
+            <hr>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+function submitAnswer(index) {
+    let doubts = JSON.parse(localStorage.getItem("doubts")) || [];
+    let answer = document.getElementById("ans" + index).value;
+
+    if(answer) {
+        doubts[index].answer = answer;
+        localStorage.setItem("doubts", JSON.stringify(doubts));
+        showDoubts();
+    } else {
+        alert("Enter answer ❌");
+    }
+}
+
+
+// 🔥 FACULTY EXPERIENCE WITH STATUS + EMAIL ADDED
+function showExperience() {
+    hideAll();
+    document.getElementById("experienceSection").style.display = "block";
+
+    let data = JSON.parse(localStorage.getItem("faculty")) || [];
+    let container = document.getElementById("experienceList");
+
+    container.innerHTML = "";
+
+    data.forEach((d, index) => {
+        let div = document.createElement("div");
+
+        div.innerHTML = `
+            <p><b>Name:</b> ${d.name}</p>
+            <p><b>Email:</b> ${d.email}</p>   <!-- ✅ ADDED EMAIL -->
+            <p><b>Experience:</b> ${d.experience}</p>
+            <p><b>Status:</b> ${d.status || "Pending"}</p>
+
+            <button onclick="updateStatus(${index}, 'Selected')">Selected</button>
+            <button onclick="updateStatus(${index}, 'Pending')">Pending</button>
+            <button onclick="updateStatus(${index}, 'Rejected')">Rejected</button>
+
+            <hr>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+function updateStatus(index, status) {
+    let data = JSON.parse(localStorage.getItem("faculty")) || [];
+
+    data[index].status = status;
+
+    localStorage.setItem("faculty", JSON.stringify(data));
+
+    alert("Updated to " + status + " ✅");
+
+    showExperience();
+}
+</script>
+
+</body>
+</html>
