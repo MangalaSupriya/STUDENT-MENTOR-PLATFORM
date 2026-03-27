@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<head>
+    <title>Student Mentor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<h2>Student & Mentor System</h2>
+
+<!-- ROLE SELECTION -->
+<div id="home">
+    <h3>Select Role</h3>
+    <button onclick="showStudent()">Student</button>
+    <button onclick="showMentor()">Mentor</button>
+</div>
+
+<hr>
+
+<!-- STUDENT SECTION -->
+<div id="studentSection" style="display:none;">
+    <h3>Student</h3>
+
+    <button onclick="showStudentRegister()">Register</button>
+    <button onclick="showStudentLogin()">Login</button>
+
+    <!-- REGISTER -->
+    <div id="studentRegister" style="display:none;">
+        <h4>Student Register</h4>
+        <input id="s_email" placeholder="Email"><br><br>
+        <input id="s_password" type="password" placeholder="Password"><br><br>
+        <button onclick="studentRegister()">Register</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="studentLogin" style="display:none;">
+        <h4>Student Login</h4>
+        <input id="sl_email" placeholder="Email"><br><br>
+        <input id="sl_password" type="password" placeholder="Password"><br><br>
+        <button onclick="studentLogin()">Login</button>
+    </div>
+</div>
+
+<hr>
+
+<!-- MENTOR SECTION -->
+<div id="mentorSection" style="display:none;">
+    <h3>Mentor</h3>
+
+    <button onclick="showMentorRegister()">Register</button>
+    <button onclick="showMentorLogin()">Login</button>
+
+    <!-- REGISTER -->
+    <div id="mentorRegister" style="display:none;">
+        <h4>Mentor Register</h4>
+        <input id="m_email" placeholder="Email"><br><br>
+        <input id="m_password" type="password"><br><br>
+        <button onclick="mentorRegister()">Register</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="mentorLogin" style="display:none;">
+        <h4>Mentor Login</h4>
+        <input id="ml_email" placeholder="Email"><br><br>
+        <input id="ml_password" type="password"><br><br>
+        <button onclick="mentorLogin()">Login</button>
+    </div>
+</div>
+
+<script>
+
+// UI FUNCTIONS (same)
+function showStudent() {
+    document.getElementById("studentSection").style.display = "block";
+    document.getElementById("mentorSection").style.display = "none";
+}
+
+function showMentor() {
+    document.getElementById("mentorSection").style.display = "block";
+    document.getElementById("studentSection").style.display = "none";
+}
+
+function showStudentRegister() {
+    document.getElementById("studentRegister").style.display = "block";
+    document.getElementById("studentLogin").style.display = "none";
+}
+
+function showStudentLogin() {
+    document.getElementById("studentLogin").style.display = "block";
+    document.getElementById("studentRegister").style.display = "none";
+}
+
+function showMentorRegister() {
+    document.getElementById("mentorRegister").style.display = "block";
+    document.getElementById("mentorLogin").style.display = "none";
+}
+
+function showMentorLogin() {
+    document.getElementById("mentorLogin").style.display = "block";
+    document.getElementById("mentorRegister").style.display = "none";
+}
+
+// ================= STUDENT REGISTER =================
+function studentRegister() {
+    let email = document.getElementById("s_email").value;
+    let password = document.getElementById("s_password").value;
+
+    let users = JSON.parse(localStorage.getItem("students")) || [];
+
+    let exists = users.find(u => u.email === email);
+
+    if(exists) {
+        alert("Already registered ❌");
+        return;
+    }
+
+    users.push({ email, password });
+
+    localStorage.setItem("students", JSON.stringify(users));
+
+    alert("Registered successfully ✅");
+
+    // ✅ SAVE USER
+    localStorage.setItem("studentEmail", email);
+
+    window.location.href = "doubts.html";
+}
+
+// ================= STUDENT LOGIN =================
+function studentLogin() {
+    let email = document.getElementById("sl_email").value;
+    let password = document.getElementById("sl_password").value;
+
+    let users = JSON.parse(localStorage.getItem("students")) || [];
+
+    let valid = users.find(u => u.email === email && u.password === password);
+
+    if(valid) {
+        localStorage.setItem("studentEmail", email); // ✅ IMPORTANT
+        window.location.href = "doubts.html";
+    } else {
+        alert("Invalid login OR not registered ❌");
+    }
+}
+
+// ================= MENTOR =================
+function mentorRegister() {
+    let email = document.getElementById("m_email").value;
+    let password = document.getElementById("m_password").value;
+
+    let mentors = JSON.parse(localStorage.getItem("mentors")) || [];
+
+    let exists = mentors.find(m => m.email === email);
+
+    if(exists) {
+        alert("Already registered ❌");
+        return;
+    }
+
+    mentors.push({ email, password });
+
+    localStorage.setItem("mentors", JSON.stringify(mentors));
+
+    alert("Registered successfully ✅");
+
+    window.location.href = "mentor.html";
+}
+
+function mentorLogin() {
+    let email = document.getElementById("ml_email").value;
+    let password = document.getElementById("ml_password").value;
+
+    let mentors = JSON.parse(localStorage.getItem("mentors")) || [];
+
+    let valid = mentors.find(m => m.email === email && m.password === password);
+
+    if(valid) {
+        window.location.href = "mentor.html";
+    } else {
+        alert("Invalid login ❌");
+    }
+}
+
+</script>
+
+</body>
+</html>
