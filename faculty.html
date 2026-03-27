@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Submit Faculty Experience</h2>
+
+<input id="name" placeholder="Enter your name"><br><br>
+<input id="email" placeholder="Enter your email"><br><br>
+
+<textarea id="experience" placeholder="Enter your experience..." 
+style="width:300px;height:100px;"></textarea><br><br>
+
+<button onclick="submitExperience()">Submit</button>
+
+<br><br>
+<button onclick="showStatusCheck()">Check Status</button>
+
+<!-- STATUS CHECK SECTION -->
+<div id="statusSection" style="display:none; margin-top:20px;">
+    <h3>Check Your Status</h3>
+
+    <input id="check_name" placeholder="Enter your name"><br><br>
+    <input id="check_email" placeholder="Enter your email"><br><br>
+
+    <button onclick="checkStatus()">View Status</button>
+
+    <p id="resultStatus" style="font-weight:bold; margin-top:10px;"></p>
+</div>
+
+<script>
+
+function submitExperience() {
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let exp = document.getElementById("experience").value;
+
+    if(name && email && exp) {
+        let data = JSON.parse(localStorage.getItem("faculty")) || [];
+
+        data.push({
+            name: name,
+            email: email,
+            experience: exp,
+            status: "Pending"
+        });
+
+        localStorage.setItem("faculty", JSON.stringify(data));
+
+        alert("Experience submitted ✅");
+
+        document.getElementById("name").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("experience").value = "";
+    } else {
+        alert("Enter all details ❌");
+    }
+}
+
+
+// SHOW STATUS FORM
+function showStatusCheck() {
+    document.getElementById("statusSection").style.display = "block";
+}
+
+
+// CHECK STATUS
+function checkStatus() {
+    let name = document.getElementById("check_name").value;
+    let email = document.getElementById("check_email").value;
+
+    let data = JSON.parse(localStorage.getItem("faculty")) || [];
+
+    let found = data.find(item => item.name === name && item.email === email);
+
+    if(found) {
+        document.getElementById("resultStatus").innerText =
+            "Your Status: " + found.status;
+    } else {
+        document.getElementById("resultStatus").innerText =
+            "No record found ❌";
+    }
+}
+
+</script>
+
+</body>
+</html>
